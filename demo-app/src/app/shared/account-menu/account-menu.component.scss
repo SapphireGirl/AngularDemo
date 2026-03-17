@@ -1,0 +1,27 @@
+.account-menu {
+  display: flex;
+  align-items: center;
+  .user-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    .greeting {
+      font-weight: 600;
+    }
+    .sign-out {
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background: #fff;
+      cursor: pointer;
+    }
+  }
+  .signed-out {
+    a {
+      color: #1976d2;
+      text-decoration: none;
+      margin: 0 6px;
+    }
+    .sep { color: #999; margin: 0 6px; }
+  }
+}

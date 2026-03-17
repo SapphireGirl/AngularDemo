@@ -40,3 +40,17 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# local extension / Copilot caches and state
+.copilot/
+.copilot.*
+.vscode/.copilot/
+
+# typical project ignores
+node_modules/
+.DS_Store
+dist/
+
+vs/
+
+.vs
