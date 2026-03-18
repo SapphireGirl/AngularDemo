@@ -1,1 +1,64 @@
-﻿/.vs/AngularDemo
+﻿# Node / package
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-error.log.*
+
+# Build output
+/dist
+dist/
+/tmp
+/out-tsc
+/bazel-out
+
+# Angular / tooling
+/.angular/cache
+/coverage
+/typings
+.sass-cache/
+connect.lock
+
+# Editors / IDEs
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code - ignore all by default but keep common workspace files
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Visual Studio
+.vs/
+vs/
+.vs/AngularDemo
+/.vs/slnx.
+
+# Local Copilot / extension files
+.copilot/
+.copilot.*
+copilot.*
+.github/copilot*
+.vscode/.copilot*
+.vscode/copilot*
+.vscode/*copilot*
+**/.copilot/
+copilot-cli*
+copilot-*.log
+copilot.toml
+copilot.yaml
+
+# Misc / logs / system
+libpeerconnection.log
+testem.log
+.DS_Store
+Thumbs.db
+
+# Angular cache
+.angular/
