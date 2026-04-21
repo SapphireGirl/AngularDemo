@@ -4,22 +4,32 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.0.
 
 ### Update Angular
-I updated to the latest version of angular
+I updated to the latest version of angular: Version 20.1.2
 1. Install npm-check-updates to run the following npm command: npm i -g npm-check-updates
 2. Run npm-check-updates with -u, will upgrade package.json file: ncu -u
 3. delete the node_modules and package-lock.json
 4. run npm install
 
+## To Run the App
+npm start then go to http://localhost:4200/
 ## Requirements:
 Create an Angular App with the following pages
-### Load spinner component
-### Account menu component
+
+### Load spinner component TODO
+### Sign in component
+### Register component
 ### Catalog component with catalog service to get data
 ### Users component with user service
-###
-## Development server
+
+## Angular Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Troubleshooting packages
+npm ls @angular/material @angular/cdk sass
+## UI
+Chose Azure Blue
+Using @angular/material@20.2.14
+using css grid and flexbox for layout: look at https://blog.angular.dev/modern-css-in-angular-layouts-4a259dca9127
 
 ## Naming Conventions Best Practices: taken from jcoop.io 
 1. Components: Upper Camel Case e.g LoadingSpinnerComponent
