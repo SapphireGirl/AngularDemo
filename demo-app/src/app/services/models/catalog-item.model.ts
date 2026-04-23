@@ -4,5 +4,5 @@ export interface ICatalogItem {
     description: string;
     category: string;
     price: number;
-    imageUrl: string;
+    imageName: string;
 }

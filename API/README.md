@@ -5,6 +5,7 @@ Express API that returns catalog data from SQL Server.
 ## 1. Setup
 
 ```bash
+# from repository root
 cd API
 npm install
 ```
@@ -20,7 +21,7 @@ Required SQL table format (default table name: `CatalogItems`):
 - `Description` (nvarchar)
 - `Category` (nvarchar)
 - `Price` (decimal)
-- `ImageUrl` (nvarchar)
+- `ImageName` (nvarchar)
 
 ## 3. Run
 
@@ -32,3 +33,6 @@ npm run dev
 
 - `GET /health`
 - `GET /api/catalog`
+
+
+## Interceptors

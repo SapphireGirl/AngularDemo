@@ -7,7 +7,8 @@
     <div class="collapse navbar-collapse justify-content-begin" id="mainNav">
       <ul class="navbar-nav align-items-center">
         <li class="nav-item">
-          <a class="nav-link fw-semibold" [routerLink]="['/catalog']">Catalog</a>
+          <a class="nav-link fw-semibold" routerLink="/catalog" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">Catalog</a>
         </li>
         <li class="nav-item">
           <!-- account-menu is a component; keep it here. Use Bootstrap spacing if needed -->

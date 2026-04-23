@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { ICatalogCategory } from './models/catalog-category.model';
 import { ICatalogItem } from './models/catalog-item.model';
 
 @Injectable({
@@ -12,7 +13,11 @@ export class CatalogRepositoryService {
 
     constructor(private http: HttpClient) { }
 
-    getCatalogItems(): Observable<ICatalogItem[]> {
-        return this.http.get<ICatalogItem[]>(this.apiUrl);
+    getCatalogCategories(): Observable<ICatalogCategory[]> {
+        return this.http.get<ICatalogCategory[]>(`${this.apiUrl}/categories`);
+    }
+
+    getCatalogItemsByCategory(categoryId: number): Observable<ICatalogItem[]> {
+        return this.http.get<ICatalogItem[]>(`${this.apiUrl}/categories/${categoryId}/items`);
     }
 }

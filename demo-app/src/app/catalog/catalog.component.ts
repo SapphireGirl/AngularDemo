@@ -1,39 +1,111 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { ICatalogCategory } from '../services/models/catalog-category.model';
 import { ICatalogItem } from '../services/models/catalog-item.model';
 import { CatalogRepositoryService } from '../services/catalog-repository.service';
 
 @Component({
     selector: 'app-catalog',
     standalone: true,
-    imports: [CommonModule],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule
+    ],
     templateUrl: './catalog.component.html',
     styleUrl: './catalog.component.scss'
 })
 export class CatalogComponent implements OnInit {
-    items: ICatalogItem[] = [];
+    private readonly imageBasePath = 'assets/images/';
+    categories: ICatalogCategory[] = [];
     isLoading = false;
-    errorMessage = '';
+    loadingCategoryId: number | null = null;
+    categoriesErrorMessage = '';
+    itemsErrorMessage = '';
+    selectedCategoryId: number | null = null;
+    private readonly itemsByCategory = new Map<number, ICatalogItem[]>();
 
     constructor(private catalogRepository: CatalogRepositoryService) { }
 
     ngOnInit(): void {
-        this.loadCatalog();
+        this.loadCategories();
     }
 
-    loadCatalog(): void {
+    loadCategories(): void {
         this.isLoading = true;
-        this.errorMessage = '';
+        this.categoriesErrorMessage = '';
+        this.itemsErrorMessage = '';
+        this.selectedCategoryId = null;
+        this.loadingCategoryId = null;
+        this.itemsByCategory.clear();
 
-        this.catalogRepository.getCatalogItems().subscribe({
-            next: (items) => {
-                this.items = items;
+        this.catalogRepository.getCatalogCategories().subscribe({
+            next: (categories) => {
+                this.categories = categories;
                 this.isLoading = false;
             },
             error: () => {
-                this.errorMessage = 'Unable to load the catalog right now. Please try again.';
+                this.categoriesErrorMessage = 'Unable to load categories right now. Please try again.';
                 this.isLoading = false;
             }
         });
+    }
+
+    toggleCategory(categoryId: number): void {
+        if (this.selectedCategoryId === categoryId) {
+            this.selectedCategoryId = null;
+            this.loadingCategoryId = null;
+            this.itemsErrorMessage = '';
+            return;
+        }
+
+        this.selectedCategoryId = categoryId;
+        this.itemsErrorMessage = '';
+
+        const cachedItems = this.itemsByCategory.get(categoryId);
+        if (cachedItems) {
+            this.loadingCategoryId = null;
+            return;
+        }
+
+        this.loadingCategoryId = categoryId;
+
+        this.catalogRepository.getCatalogItemsByCategory(categoryId).subscribe({
+            next: (items) => {
+                this.itemsByCategory.set(categoryId, items);
+                this.loadingCategoryId = null;
+            },
+            error: () => {
+                this.itemsErrorMessage = 'Unable to load items for this category right now. Please try again.';
+                this.loadingCategoryId = null;
+            }
+        });
+    }
+
+    isCategoryExpanded(categoryId: number): boolean {
+        return this.selectedCategoryId === categoryId;
+    }
+
+    getItemsForCategory(categoryId: number): ICatalogItem[] {
+        return this.itemsByCategory.get(categoryId) ?? [];
+    }
+
+    getItemCount(categoryId: number): number | null {
+        const items = this.itemsByCategory.get(categoryId);
+        return items !== undefined ? items.length : null;
+    }
+
+    getImageSrc(imageName: string): string {
+        if (/^https?:\/\//i.test(imageName) || imageName.startsWith('assets/')) {
+            return imageName;
+        }
+
+        return `${this.imageBasePath}${imageName}`;
     }
 }
