@@ -1,16 +1,14 @@
 <div class="account-menu">
-  <ng-container *ngIf="user; else signedOutTpl">
-    <div class="user-info">
-      <span class="greeting">Hello, {{ user.first }}</span>
-      <button class="sign-out" type="button" (click)="signOut()">Sign out</button>
-    </div>
-  </ng-container>
-
-  <ng-template #signedOutTpl>
-    <div class="signed-out">
-      <a routerLink="/signin">Sign in</a>
-      <span class="sep">|</span>
-      <a routerLink="/register">Register</a>
-    </div>
-  </ng-template>
+  @if (user) {
+  <div class="user-info">
+    <span class="greeting">Hello, {{ user.first }}</span>
+    <button class="sign-out" type="button" (click)="signOut()">Sign out</button>
+  </div>
+  } @else {
+  <div class="signed-out">
+    <a routerLink="/signin">Sign in</a>
+    <span class="sep">|</span>
+    <a routerLink="/register">Register</a>
+  </div>
+  }
 </div>

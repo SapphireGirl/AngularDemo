@@ -10,8 +10,30 @@ I updated to the latest version of angular: Version 20.1.2
 3. delete the node_modules and package-lock.json
 4. run npm install
 
+
 ## To Run the App
 npm start then go to http://localhost:4200/
+
+## To Run Frontend + API
+
+From repository root, start API:
+
+```bash
+cd API
+npm install
+npm run dev
+```
+
+In a separate terminal, start Angular app:
+
+```bash
+cd demo-app
+npm install
+npm start
+```
+
+Frontend: http://localhost:4200/
+API: http://localhost:3000/health
 ## Requirements:
 Create an Angular App with the following pages
 

@@ -62,3 +62,6 @@ Thumbs.db
 
 # Angular cache
 .angular/
+
+# Env files
+.env

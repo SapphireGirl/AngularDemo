@@ -1,30 +1,99 @@
-<section class="catalog-page py-4 px-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0">Catalog</h2>
-        <button class="btn btn-outline-primary" (click)="loadCatalog()">Refresh</button>
+<section class="catalog-page">
+
+    <div class="catalog-header">
+        <h2>Catalog</h2>
+        <button mat-stroked-button (click)="loadCategories()">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
     </div>
 
-    <p class="text-muted" *ngIf="!isLoading && !errorMessage">Products loaded from the API.</p>
-
-    <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
-        {{ errorMessage }}
+    @if (isLoading) {
+    <div class="loading-container">
+        <mat-spinner diameter="48" aria-label="Loading catalog" />
     </div>
+    }
 
-    <div class="text-center my-5" *ngIf="isLoading">
-        <div class="spinner-border" role="status" aria-label="Loading catalog"></div>
-    </div>
+    @if (categoriesErrorMessage) {
+    <mat-card class="error-card" appearance="outlined">
+        <mat-card-content>{{ categoriesErrorMessage }}</mat-card-content>
+    </mat-card>
+    }
 
-    <div class="row g-3" *ngIf="!isLoading && !errorMessage">
-        <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of items">
-            <article class="card h-100 shadow-sm">
-                <img [src]="item.imageUrl" [alt]="item.title" class="card-img-top product-image" />
-                <div class="card-body d-flex flex-column">
-                    <span class="badge text-bg-secondary align-self-start mb-2">{{ item.category }}</span>
-                    <h5 class="card-title">{{ item.title }}</h5>
-                    <p class="card-text text-muted flex-grow-1">{{ item.description }}</p>
-                    <p class="fw-semibold mb-0">{{ item.price | currency }}</p>
+    @if (!isLoading && !categoriesErrorMessage && categories.length > 0) {
+    <div class="category-grid">
+        @for (category of categories; track category.id) {
+        <mat-card class="category-card" [class.category-card--selected]="isCategoryExpanded(category.id)"
+            appearance="outlined" role="button" tabindex="0" (click)="toggleCategory(category.id)"
+            (keyup.enter)="toggleCategory(category.id)" (keyup.space)="toggleCategory(category.id)">
+            <mat-card-content>
+                <div class="category-card__header">
+                    <div>
+                        <p class="category-card__eyebrow">Catalog</p>
+                        <mat-card-title>{{ category.name }}</mat-card-title>
+                    </div>
+                    <div class="category-card__actions">
+                        @if (getItemCount(category.id) !== null) {
+                        <span class="category-card__badge">{{ getItemCount(category.id) }}</span>
+                        }
+                        <mat-icon>{{ isCategoryExpanded(category.id) ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+                    </div>
                 </div>
-            </article>
-        </div>
+                <p class="category-card__hint">
+                    {{ isCategoryExpanded(category.id) ? 'Click again to collapse this category.' : 'Click to load items
+                    in this category.' }}
+                </p>
+            </mat-card-content>
+
+            @if (isCategoryExpanded(category.id)) {
+            <mat-card-content class="category-card__details" animate.enter="category-card__details-enter"
+                animate.leave="category-card__details-leave" (click)="$event.stopPropagation()">
+                @if (loadingCategoryId === category.id) {
+                <div class="inline-loading-state">
+                    <mat-spinner diameter="36" aria-label="Loading category items" />
+                </div>
+                }
+
+                @if (itemsErrorMessage && loadingCategoryId !== category.id) {
+                <div class="inline-message inline-message--error">{{ itemsErrorMessage }}</div>
+                }
+
+                @if (!itemsErrorMessage && loadingCategoryId !== category.id && getItemsForCategory(category.id).length
+                === 0) {
+                <div class="inline-message">No catalog items were returned for this category.</div>
+                }
+
+                @if (!itemsErrorMessage && loadingCategoryId !== category.id && getItemsForCategory(category.id).length
+                > 0) {
+                <div class="catalog-items-list">
+                    @for (item of getItemsForCategory(category.id); track item.id) {
+                    <div class="catalog-item-row">
+                        <img class="catalog-item-row__image" [src]="getImageSrc(item.imageName)" [alt]="item.title" />
+                        <div class="catalog-item-row__body">
+                            <div class="catalog-item-row__summary">
+                                <div>
+                                    <h3>{{ item.title }}</h3>
+                                    <p class="catalog-item-row__category">{{ item.category }}</p>
+                                </div>
+                                <p class="catalog-item-row__price">{{ item.price | currency }}</p>
+                            </div>
+                            <p class="catalog-item-row__description">{{ item.description }}</p>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </mat-card-content>
+            }
+        </mat-card>
+        }
     </div>
+    }
+
+    @if (!isLoading && !categoriesErrorMessage && categories.length === 0) {
+    <mat-card class="empty-state-card" appearance="outlined">
+        <mat-card-content>No catalog categories are available right now.</mat-card-content>
+    </mat-card>
+    }
+
 </section>

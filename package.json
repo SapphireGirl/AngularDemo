@@ -1,0 +1,16 @@
+{
+    "name": "angulardemo-root",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev:api": "npm run dev --prefix API",
+        "dev:web": "npm start --prefix demo-app",
+        "dev:all": "concurrently -n API,WEB -c cyan,green \"npm run dev --prefix API\" \"npm start --prefix demo-app\"",
+        "install:all": "npm install --prefix API && npm install --prefix demo-app",
+        "stop:all": "kill-port 3000 4200"
+    },
+    "devDependencies": {
+        "concurrently": "^9.2.1",
+        "kill-port": "^2.0.1"
+    }
+}

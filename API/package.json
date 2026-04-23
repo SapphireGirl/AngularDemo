@@ -5,13 +5,15 @@
     "main": "src/server.js",
     "scripts": {
         "start": "node src/server.js",
-        "dev": "nodemon src/server.js"
+        "dev": "nodemon src/server.js",
+        "stop:all": "npm run stop:all --prefix .."
     },
     "dependencies": {
         "cors": "^2.8.5",
-        "dotenv": "^16.5.0",
-        "express": "^4.21.2",
-        "mssql": "^11.0.1"
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "mssql": "^12.3.1",
+        "msnodesqlv8": "^5.1.1"
     },
     "devDependencies": {
         "nodemon": "^3.1.10"
