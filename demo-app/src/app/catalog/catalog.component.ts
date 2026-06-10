@@ -6,7 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { ICatalogCategory } from '../services/models/catalog-category.model';
 import { ICatalogItem } from '../services/models/catalog-item.model';
-import { CatalogRepositoryService } from '../services/catalog-repository.service';
+import { CatalogService } from '../services/catalog.service';
 
 @Component({
     selector: 'app-catalog',
@@ -29,9 +29,8 @@ export class CatalogComponent implements OnInit {
     categoriesErrorMessage = '';
     itemsErrorMessage = '';
     selectedCategoryId: number | null = null;
-    private readonly itemsByCategory = new Map<number, ICatalogItem[]>();
 
-    constructor(private catalogRepository: CatalogRepositoryService) { }
+    constructor(private catalogService: CatalogService) { }
 
     ngOnInit(): void {
         this.loadCategories();
@@ -43,9 +42,9 @@ export class CatalogComponent implements OnInit {
         this.itemsErrorMessage = '';
         this.selectedCategoryId = null;
         this.loadingCategoryId = null;
-        this.itemsByCategory.clear();
+        this.catalogService.clearCatalogItemCache();
 
-        this.catalogRepository.getCatalogCategories().subscribe({
+        this.catalogService.getCatalogCategories().subscribe({
             next: (categories) => {
                 this.categories = categories;
                 this.isLoading = false;
@@ -68,7 +67,7 @@ export class CatalogComponent implements OnInit {
         this.selectedCategoryId = categoryId;
         this.itemsErrorMessage = '';
 
-        const cachedItems = this.itemsByCategory.get(categoryId);
+        const cachedItems = this.catalogService.getCachedCatalogItems(categoryId);
         if (cachedItems) {
             this.loadingCategoryId = null;
             return;
@@ -76,9 +75,8 @@ export class CatalogComponent implements OnInit {
 
         this.loadingCategoryId = categoryId;
 
-        this.catalogRepository.getCatalogItemsByCategory(categoryId).subscribe({
-            next: (items) => {
-                this.itemsByCategory.set(categoryId, items);
+        this.catalogService.getCatalogItemsByCategory(categoryId).subscribe({
+            next: () => {
                 this.loadingCategoryId = null;
             },
             error: () => {
@@ -93,12 +91,12 @@ export class CatalogComponent implements OnInit {
     }
 
     getItemsForCategory(categoryId: number): ICatalogItem[] {
-        return this.itemsByCategory.get(categoryId) ?? [];
+        return this.catalogService.getCachedCatalogItems(categoryId) ?? [];
     }
 
     getItemCount(categoryId: number): number | null {
-        const items = this.itemsByCategory.get(categoryId);
-        return items !== undefined ? items.length : null;
+        const items = this.catalogService.getCachedCatalogItems(categoryId);
+        return items ? items.length : null;
     }
 
     getImageSrc(imageName: string): string {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import { CatalogComponent } from './catalog.component';
-import { CatalogRepositoryService } from '../services/catalog-repository.service';
+import { CatalogService } from '../services/catalog.service';
 import { ICatalogCategory } from '../services/models/catalog-category.model';
 import { ICatalogItem } from '../services/models/catalog-item.model';
 
@@ -19,19 +19,28 @@ const MOCK_ITEMS: ICatalogItem[] = [
 describe('CatalogComponent', () => {
     let fixture: ComponentFixture<CatalogComponent>;
     let component: CatalogComponent;
-    let mockRepo: jasmine.SpyObj<CatalogRepositoryService>;
+    let mockCatalogService: jasmine.SpyObj<CatalogService>;
+    let cachedByCategory: Map<number, ICatalogItem[]>;
 
     beforeEach(async () => {
-        mockRepo = jasmine.createSpyObj('CatalogRepositoryService', [
+        cachedByCategory = new Map<number, ICatalogItem[]>();
+        mockCatalogService = jasmine.createSpyObj('CatalogService', [
             'getCatalogCategories',
-            'getCatalogItemsByCategory'
+            'getCatalogItemsByCategory',
+            'getCachedCatalogItems',
+            'clearCatalogItemCache'
         ]);
-        mockRepo.getCatalogCategories.and.returnValue(of(MOCK_CATEGORIES));
-        mockRepo.getCatalogItemsByCategory.and.returnValue(of(MOCK_ITEMS));
+        mockCatalogService.getCatalogCategories.and.returnValue(of(MOCK_CATEGORIES));
+        mockCatalogService.getCatalogItemsByCategory.and.callFake((categoryId: number) => {
+            cachedByCategory.set(categoryId, MOCK_ITEMS);
+            return of(MOCK_ITEMS);
+        });
+        mockCatalogService.getCachedCatalogItems.and.callFake((categoryId: number) => cachedByCategory.get(categoryId) ?? null);
+        mockCatalogService.clearCatalogItemCache.and.callFake(() => cachedByCategory.clear());
 
         await TestBed.configureTestingModule({
             imports: [CatalogComponent],
-            providers: [{ provide: CatalogRepositoryService, useValue: mockRepo }]
+            providers: [{ provide: CatalogService, useValue: mockCatalogService }]
         }).compileComponents();
 
         fixture = TestBed.createComponent(CatalogComponent);
@@ -44,7 +53,8 @@ describe('CatalogComponent', () => {
     });
 
     it('should load categories on init', () => {
-        expect(mockRepo.getCatalogCategories).toHaveBeenCalledTimes(1);
+        expect(mockCatalogService.getCatalogCategories).toHaveBeenCalledTimes(1);
+        expect(mockCatalogService.clearCatalogItemCache).toHaveBeenCalledTimes(1);
         expect(component.categories).toEqual(MOCK_CATEGORIES);
         expect(component.isLoading).toBeFalse();
     });
@@ -52,7 +62,7 @@ describe('CatalogComponent', () => {
     it('should fetch items when a category card is clicked', () => {
         component.toggleCategory(1);
 
-        expect(mockRepo.getCatalogItemsByCategory).toHaveBeenCalledOnceWith(1);
+        expect(mockCatalogService.getCatalogItemsByCategory).toHaveBeenCalledOnceWith(1);
         expect(component.selectedCategoryId).toBe(1);
         expect(component.loadingCategoryId).toBeNull();
     });
@@ -70,12 +80,12 @@ describe('CatalogComponent', () => {
         component.toggleCategory(1);  // collapse
         component.toggleCategory(1);  // re-open — should hit cache
 
-        expect(mockRepo.getCatalogItemsByCategory).toHaveBeenCalledTimes(1);
+        expect(mockCatalogService.getCatalogItemsByCategory).toHaveBeenCalledTimes(1);
         expect(component.loadingCategoryId).toBeNull();
     });
 
     it('should set an error message when the item fetch fails', () => {
-        mockRepo.getCatalogItemsByCategory.and.returnValue(throwError(() => new Error('server error')));
+        mockCatalogService.getCatalogItemsByCategory.and.returnValue(throwError(() => new Error('server error')));
 
         component.toggleCategory(2);
 
@@ -84,13 +94,14 @@ describe('CatalogComponent', () => {
     });
 
     it('should clear error and selected category when refreshing', () => {
-        mockRepo.getCatalogItemsByCategory.and.returnValue(throwError(() => new Error('fail')));
+        mockCatalogService.getCatalogItemsByCategory.and.returnValue(throwError(() => new Error('fail')));
         component.toggleCategory(1);
 
         component.loadCategories();
 
         expect(component.itemsErrorMessage).toBe('');
         expect(component.selectedCategoryId).toBeNull();
+        expect(mockCatalogService.clearCatalogItemCache).toHaveBeenCalledTimes(2);
     });
 
     it('should report item count after items are loaded', () => {
