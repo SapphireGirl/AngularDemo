@@ -18,4 +18,8 @@ export class ApiRequestInterceptor implements HttpInterceptor {
 
         return next.handle(request);
     }
+
+    constructor() {
+        console.log('ApiRequestInterceptor initialized');
+    }
 }
