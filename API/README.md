@@ -12,7 +12,11 @@ npm install
 
 ## 2. Configure environment
 
-Create a `.env` file from `.env.example` and set your SQL values.
+Use `.env.local` for local development.
+
+1. Copy the keys from `.env.example` into `.env.local`
+2. Set your real SQL values in `.env.local`
+3. Keep `.env.example` as placeholders only for sharing with the team
 
 Required SQL table format (default table name: `CatalogItems`):
 

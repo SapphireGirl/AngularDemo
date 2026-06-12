@@ -1,14 +1,18 @@
 import { Injectable } from "@angular/core";
-import { Observable, EMPTY, throwError, timer } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { Observable, throwError, timer } from "rxjs";
+import { map } from "rxjs/operators";
 import { IUser } from "./models/user.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserRepositoryService {
+    private readonly tokenStorageKey = 'token';
+    private readonly apiUrl = 'http://localhost:3000/api';
     currentUser: IUser | null = null;
 
-    constructor() { }
+    constructor(private http: HttpClient) { }
 
     saveUser(user: IUser): Observable<any> {
         let classes = user.classes || [];
@@ -54,18 +58,54 @@ export class UserRepositoryService {
     }
 
     signIn(credentials: any): Observable<any> {
-        if (credentials.email !== 'me@example.com' || credentials.password !== 'super-secret') {
-            return throwError(() => new Error('Invalid login'));
+        return this.http
+            .post<{ token: string; user: IUser }>(`${this.apiUrl}/auth/login`, credentials)
+            .pipe(
+                map((response) => {
+                    localStorage.setItem(this.tokenStorageKey, response.token);
+                    this.currentUser = response.user;
+                    return response.user;
+                })
+            );
+    }
+
+    signOut(): void {
+        this.currentUser = null;
+        localStorage.removeItem(this.tokenStorageKey);
+    }
+
+    isAuthenticated(): boolean {
+        if (this.currentUser) {
+            return true;
         }
 
-        this.currentUser = {
-            userId: 'e61aebed-dbc5-437a-b514-02b8380d8efc',
-            first: 'Justine',
-            last: 'Alires',
-            email: 'me@example.com',
-            classes: []
-        };
+        const token = localStorage.getItem(this.tokenStorageKey);
+        if (!token) {
+            return false;
+        }
 
-        return EMPTY
+        const payload = this.readTokenPayload(token);
+        if (!payload?.exp) {
+            return false;
+        }
+
+        const nowSeconds = Math.floor(Date.now() / 1000);
+        return nowSeconds < Number(payload.exp);
+    }
+
+    private readTokenPayload(token: string): { exp?: number } | null {
+        try {
+            const [payloadSegment] = token.split('.');
+            if (!payloadSegment) {
+                return null;
+            }
+
+            const normalized = payloadSegment.replace(/-/g, '+').replace(/_/g, '/');
+            const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
+            const json = atob(padded);
+            return JSON.parse(json);
+        } catch {
+            return null;
+        }
     }
 }

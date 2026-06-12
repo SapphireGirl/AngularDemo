@@ -1,0 +1,81 @@
+.auth-container {
+    max-width: 460px;
+    margin: 2rem auto;
+    background: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+h2 {
+    margin-bottom: 0.5rem;
+}
+
+.status {
+    margin-bottom: 1rem;
+    color: #4a4a4a;
+}
+
+.info {
+    margin-bottom: 1rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid #8ab4d6;
+    border-radius: 8px;
+    background: #eef6fc;
+    color: #114a73;
+}
+
+.auth-form {
+    display: grid;
+    gap: 0.5rem;
+}
+
+input {
+    border: 1px solid #c8c8c8;
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+}
+
+.password-field {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.password-field input {
+    width: 100%;
+}
+
+.toggle-password {
+    border: 1px solid #0f5b8d;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #0f5b8d;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+}
+
+.actions {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    background: #0f5b8d;
+    color: #fff;
+    padding: 0.55rem 0.9rem;
+    cursor: pointer;
+}
+
+button.secondary {
+    background: #767676;
+}
+
+.error {
+    color: #b42318;
+    margin-top: 0.8rem;
+}

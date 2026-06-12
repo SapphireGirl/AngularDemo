@@ -1,0 +1,38 @@
+<section class="auth-container">
+    <h2>Account Access</h2>
+
+    @if (currentUser) {
+    <p class="status">Signed in as {{ currentUser.email }}</p>
+    } @else {
+    <p class="status">You are currently signed out.</p>
+    }
+
+    @if (infoMessage) {
+    <p class="info">{{ infoMessage }}</p>
+    }
+
+    <form class="auth-form" (ngSubmit)="signIn()">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" [(ngModel)]="email" required />
+
+        <label for="password">Password</label>
+        <div class="password-field">
+            <input id="password" name="password" [type]="passwordInputType" [(ngModel)]="password" required />
+            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()"
+                [attr.aria-pressed]="showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                {{ showPassword ? 'Hide' : 'Show' }}
+            </button>
+        </div>
+
+        <div class="actions">
+            <button type="submit" [disabled]="isLoading">
+                {{ isLoading ? 'Signing in...' : 'Sign In' }}
+            </button>
+            <button type="button" class="secondary" [disabled]="isLoading" (click)="signOut()">Sign Out</button>
+        </div>
+    </form>
+
+    @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+    }
+</section>

@@ -3,7 +3,8 @@
 Use these as baseline answers, then personalize with your own project examples.
 
 ## 1) What is Angular, and how is it different from AngularJS?
-Angular is a TypeScript-based, component-driven framework for building single-page applications. AngularJS (1.x) was JavaScript-based and used a very different architecture (controllers, `$scope`, digest cycle). Modern Angular has better tooling, stronger typing, improved performance, RxJS integration, and a structured CLI ecosystem.
+**Angular is a TypeScript-based, component-driven framework for building single-page applications.**  
+AngularJS (1.x) was JavaScript-based and used a very different architecture (controllers, `$scope`, digest cycle). Modern Angular has better tooling, stronger typing, improved performance, RxJS integration, and a structured CLI ecosystem.
 
 ## 2) What are the key building blocks of an Angular app?
 The core building blocks are components, templates, directives, services, dependency injection, routing, and forms. In modern Angular, standalone components can be the primary unit instead of NgModules.
