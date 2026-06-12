@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 import { CatalogComponent } from './catalog.component';
 import { CatalogService } from '../services/catalog.service';
@@ -39,7 +44,8 @@ describe('CatalogComponent', () => {
         mockCatalogService.clearCatalogItemCache.and.callFake(() => cachedByCategory.clear());
 
         await TestBed.configureTestingModule({
-            imports: [CatalogComponent],
+            declarations: [CatalogComponent],
+            imports: [CommonModule, MatCardModule, MatButtonModule, MatProgressSpinnerModule, MatIconModule],
             providers: [{ provide: CatalogService, useValue: mockCatalogService }]
         }).compileComponents();
 

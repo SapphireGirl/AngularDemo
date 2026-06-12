@@ -89,7 +89,11 @@ npm run stop:all
 
 ## Environment Setup (API)
 
-Create `.env` in `API` from `.env.example` and configure your SQL Server values.
+Use `API/.env.local` for local development values.
+
+1. Copy the keys from `API/.env.example` into `API/.env.local`
+2. Put your real SQL Server values in `API/.env.local`
+3. Keep `API/.env.example` sanitized with placeholders only
 
 ## Running Tests
 

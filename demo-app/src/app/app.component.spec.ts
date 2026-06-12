@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
+import { NavBarComponent } from './shared/nav-bar/nav-bar.component';
+import { AccountMenuComponent } from './shared/account-menu/account-menu.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
-      providers: [provideRouter([])]
+      declarations: [AppComponent, NavBarComponent, AccountMenuComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
   });
 

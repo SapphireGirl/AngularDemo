@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CommonModule } from '@angular/common';
 
 import { NavBarComponent } from './nav-bar.component';
+import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { UserRepositoryService } from '../../services/user-repository.service';
 
 describe('NavBarComponent', () => {
@@ -12,9 +14,9 @@ describe('NavBarComponent', () => {
     const mockUserRepo = jasmine.createSpyObj('UserRepositoryService', [], { currentUser: null });
 
     await TestBed.configureTestingModule({
-      imports: [NavBarComponent],
+      declarations: [NavBarComponent, AccountMenuComponent],
+      imports: [RouterTestingModule, CommonModule],
       providers: [
-        provideRouter([]),
         { provide: UserRepositoryService, useValue: mockUserRepo }
       ]
     }).compileComponents();

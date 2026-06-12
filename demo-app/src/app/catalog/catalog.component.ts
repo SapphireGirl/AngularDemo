@@ -1,23 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
 import { ICatalogCategory } from '../services/models/catalog-category.model';
 import { ICatalogItem } from '../services/models/catalog-item.model';
 import { CatalogService } from '../services/catalog.service';
 
 @Component({
     selector: 'app-catalog',
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatCardModule,
-        MatButtonModule,
-        MatProgressSpinnerModule,
-        MatIconModule
-    ],
+    standalone: false,
     templateUrl: './catalog.component.html',
     styleUrl: './catalog.component.scss'
 })

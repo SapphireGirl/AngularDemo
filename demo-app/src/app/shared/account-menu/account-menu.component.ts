@@ -1,12 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { IUser } from '../../services/models/user.model';
 
 @Component({
   selector: 'account-menu',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
+  standalone: false,
   templateUrl: './account-menu.component.html',
   styleUrls: ['./account-menu.component.scss']
 })

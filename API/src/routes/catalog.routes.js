@@ -1,7 +1,10 @@
 const express = require('express');
 const { getCatalogCategories, getCatalogItemsByCategory } = require('../services/catalog.service');
+const { requireAuth } = require('../middleware/auth.middleware');
 
 const router = express.Router();
+
+router.use('/catalog', requireAuth);
 
 router.get('/catalog/categories', async (req, res) => {
     try {
